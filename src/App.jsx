@@ -46,19 +46,39 @@ function App() {
     29: 'Nonprofits & Activism'
   }
 
-  function get_unique_Column(name) {
-    var col = []
-    for (var i = 0; i < usvideos.length; i += 1) {
-      if (col.includes(usvideos[i][name]) == false) {
-        col.push(usvideos[i][name].toString())
-      }
-    };
-    return col;
+  const cat_to_t_view = {
+    24:  '55,259 M',
+    10:  '55,225 M',
+    20:  '31,309 M',
+    17:  '16,395 M',
+    22:  '14,378 M',
+    23:  '9,533 M',
+    1:   '7,430 M',
+    28:  '6,747 M',
+    25:  '4,089 M',
+    27:  '3,293 M',
+    26:  '2,960 M',
+    2:   '1,322 M',
+    19:  '529 M',
+    15:  '455 M',
+    29:  '112 M',
   }
 
-  var cats = get_unique_Column('categoryId')
+  const cats = [24, 10, 20, 17, 22, 23, 1, 28, 25, 27, 26, 2, 19, 15, 29]
 
-  const [selectedCats, setSelectedCats] = useState(cats);
+  // function get_unique_Column(name) {
+  //   var col = []
+  //   for (var i = 0; i < usvideos.length; i += 1) {
+  //     if (col.includes(usvideos[i][name]) == false) {
+  //       col.push(usvideos[i][name].toString())
+  //     }
+  //   };
+  //   return col;
+  // }
+
+  // var cats = get_unique_Column('categoryId')
+
+  // const [selectedCats, setSelectedCats] = useState(cats);
   const cat_by_id = {}
   for (var i = 0; i < usvideos_max.length; i += 1) {
     if (!cat_by_id[usvideos_max[i]['categoryId']]) {
@@ -66,6 +86,7 @@ function App() {
     }
     cat_by_id[usvideos_max[i]['categoryId']].push(i);
   }
+
   function clickCircle(cat) {
     var cat = cat.toString()
     var circles = document.getElementsByClassName(cat);
@@ -93,6 +114,44 @@ function App() {
     // }
   }
 
+  // const HoverText = () => {
+  //   return (
+  //     <div>
+  //       Hovering right meow!
+  //       {console.log(22222)}
+  //       <h1>hellooooo</h1>
+  //       <span role="img" aria-label="cat">
+  //         🐱
+  //       </span>
+  //     </div>
+  //   );
+  // };
+
+  // const [isHovering, setIsHovering] = useState(false);
+  // const handleMouseOver = () => {
+  //   setIsHovering(true);
+  // };
+
+  // function handleMouseOut(title){
+  //   setIsHovering(false);
+  // };
+
+  function handleMouseOver(id){
+    var circle = document.getElementsById(id);
+
+    if (circle.getAttribute("opacity") == 0.1){
+      circle.setAttribute("opacity", 1.0);
+    }else{
+      circle.setAttribute("opacity", 0.1);
+    }
+  }
+
+  function handleMouseOut(id){
+    var circle = document.getElementsById(id);
+    
+    circle.setAttribute("opacity", 1.0);
+  }
+
   const _scaleX2 = scaleLinear()
   .domain([0, 365])
   .range([0, 1100]);
@@ -102,8 +161,11 @@ function App() {
   .range([550, 50]);
 
   return (
-    <div style={{ margin: 20 }}>
-      <h1> Youtube Trending Videos | 2021 </h1>
+    <div style={{ margin: 10 }}>
+      <div style={{ display: "flex", 'align-items':"center", 'padding-left':"20px"}}> 
+        <img src="src/YouTube-Emblem.png" alt="Italian Trulli" height="25px"/>
+        <h1 style={{'padding-left':"20px"}}> YouTube Trending Videos | 2021 </h1>
+      </div>
       <div style={{ display: "flex" }}>
         <svg
           width={1500}
@@ -114,48 +176,75 @@ function App() {
             return ids.map((id) => {
               return (
                 <circle
-                class={usvideos_max[id]['categoryId']}
-                cx={100 + parseInt(usvideos_max[id]['trending_date']) / 365 * 1100} 
-                cy={550 - usvideos_max[id]['view_count'] / 264407389 * 500} 
-                r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
-                fill={cat_cols[cat]} 
-                opacity={0.1}
+                  class={usvideos_max[id]['categoryId']}
+                  cx={70 + parseInt(usvideos_max[id]['trending_date']) / 365 * 1100} 
+                  cy={550 - usvideos_max[id]['view_count'] / 264407389 * 500} 
+                  r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
+                  fill={cat_cols[cat]} 
+                  opacity={0.1}
                 />
               )
             })
           })}
+          {/* {isHovering && <HoverText />} */}
+          {cats.map((cat, i) => {
+            return (
+              <text 
+                x={1250 - 70} 
+                y={43 + i * 23} 
+                fontSize={12}> 
+                  {cat_to_t_view[cat]} 
+              </text>
+            )
+          })}
           {cats.map((cat, i) => {
             return (
               <circle
-                // key={cat}
                 id={cat}
                 class={cat}
-                // name={cat}
                 cx={1250} 
-                cy={50 + i * 23} 
+                cy={40 + i * 23} 
                 r="8" 
                 fill={cat_cols[cat]} 
                 opacity={0.1}
                 stroke={"white"}
                 stroke-width={1.5}
                 onClick={() => clickCircle(cat)}
-                />
+                onMouseOver={() => handleMouseOver()} 
+                onMouseOut={handleMouseOut}
+              />
             )
            })}
           {cats.map((cat, i) => {
-            return (<text x={1250 + 20} y={55 + i * 23} fontSize={12}> {cat_id_to_names[cat]} </text>)
+            return (
+              <text 
+                x={1250 + 20} 
+                y={43 + i * 23} 
+                fontSize={12}> 
+                  {cat_id_to_names[cat]} 
+              </text>
+            )
           })}
-          <AxisLeft strokeWidth={0} left={80} scale={_scaleY2} />
-          <AxisBottom
-            strokeWidth={0}
-            top={550}
-            left={80}
-            scale={_scaleX2}
-            // tickValues={ages}
-            fontSize={25}
+          <AxisLeft 
+            strokeWidth={1} 
+            left={70} 
+            scale={_scaleY2} 
+            stroke={"#808080"}
           />
-          <text x={1280} y={30}> Category </text>
+          <AxisBottom
+            strokeWidth={1}
+            top={570}
+            left={70}
+            scale={_scaleX2}
+            fontSize={25}
+            stroke={"#808080"}
+            numTicks={11}
+          />
+          <text x={1265} y={13}> Category </text>
+          <text x={1160} y={13}> Total Views</text>
+          <text x={1250} y={13}> | </text>
           <text x={1210} y={570}> Days </text>
+          <text x={20} y={15}> # Views </text>
         </svg>
       </div>
     </div>
