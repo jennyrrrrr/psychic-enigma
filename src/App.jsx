@@ -72,6 +72,19 @@ function App() {
 
   const [selectedPoint, setSelectedPoint] = useState(point);
 
+  const points = Array.from(Array(usvideos_max.length).keys())
+  const [selectedPoints, setSelectedPoints] = useState(points);
+
+  function getIndexByValue(col_name, value) {
+    var col = []
+    for (var i = 0; i < usvideos_max.length; i += 1) {
+      if (usvideos_max[i][col_name] == value) {
+        col.push(i)
+      }
+    };
+    return col;
+  }
+
   const cat_by_id = {}
   for (var i = 0; i < usvideos_max.length; i += 1) {
     if (!cat_by_id[usvideos_max[i]['categoryId']]) {
@@ -86,13 +99,24 @@ function App() {
     
     for (var i = 0; i < circles.length; i+= 1) {
       var circle = circles[i]
-      if (circle.getAttribute("opacity") == 0.1){
+      if (circle.getAttribute("opacity") == 0.15){
         circle.setAttribute("opacity", 1.0);
         circle.setAttribute("stroke", 'black');
       } else {
-        circle.setAttribute("opacity", 0.1);
+        circle.setAttribute("opacity", 0.15);
         circle.setAttribute("stroke", 'white');
       }
+    }
+
+    var cat = 'cat' + cat.toString()
+    var cat_circle = document.getElementById(cat);
+    // console.log(cat_circle)
+    if (cat_circle.getAttribute("opacity") == 0.15){
+      cat_circle.setAttribute("opacity", 1.0);
+      cat_circle.setAttribute("stroke", 'black');
+    } else {
+      cat_circle.setAttribute("opacity", 0.15);
+      cat_circle.setAttribute("stroke", 'white');
     }
     
   }
@@ -178,12 +202,12 @@ function App() {
   }
 
   const _scaleX2 = scaleLinear()
-  .domain([0, 365])
-  .range([0, 1100]);
+                    .domain([0, 365])
+                    .range([0, 1100]);
 
   const _scaleY2 = scaleLinear()
-  .domain([0, 264407389])
-  .range([550, 50]);
+                    .domain([0, 264407389])
+                    .range([550, 50]);
 
   return (
     <div style={{ margin: 10 }}>
@@ -207,7 +231,8 @@ function App() {
                   cy={560 - usvideos_max[id]['view_count'] / 264407389 * 500} 
                   r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
                   fill={cat_cols[cat]} 
-                  opacity={0.15}
+                  opacity={selectedPoints.includes(id) ? 1.0:0.15}
+                  stroke={'black'}
                   onMouseOver={() => {
                     handleMouseOver(id);
                     setSelectedPoint(id);
@@ -242,12 +267,19 @@ function App() {
                 cy={40 + i * 23} 
                 r="8" 
                 fill={cat_cols[cat]} 
-                opacity={0.15}
-                stroke={"white"}
+                opacity={selectedCats.includes(cat) ? 1.0:0.15}
+                stroke={"black"}
                 strokeWidth={1.5}
-                onClick={() => clickCircle(cat)}
-                onMouseOver={() => handleMouseOver('cat' + cat)} 
-                onMouseOut={() => handleMouseOut('cat' + cat)}
+                // onClick={() => clickCircle(cat)}
+                onClick={() => {
+                  setSelectedCats([cat])
+                  setSelectedPoints(getIndexByValue('categoryId', cat))
+                  console.log(selectedCats)
+                  console.log(cat)
+                  console.log(selectedCats.includes(cat))
+                }}
+                // onMouseOver={() => handleMouseOver('cat' + cat)} 
+                // onMouseOut={() => handleMouseOut('cat' + cat)}
               />
             )
            })}
