@@ -340,12 +340,33 @@ function App() {
           />
           {/* text & labels */}
           <text x={1265} y={13}> Category </text>
-          <text x={1160} y={13}> Total Views</text>
+          <text x={1160} y={13}> Total Views </text>
           <text x={1250} y={13}> | </text>
           <text x={1210} y={580}> Days </text>
           <text x={30} y={30}> Views </text>
         </svg>
       </div>
+      <h3> About </h3>
+      <p> The main viz is a dot plot, plotting the highest number of views for each video trended on Youtube in 2021. 
+        The x-axis is the day of the year the video is trending, the y-axis is the number of views, and the size of the circle is the number of days the video trended. 
+        The larger the circle, the longer the video trended. 
+        Users can select and filter the points by category; hover on each of the points to see some detailed information about the video. 
+        Users can also click on the points(video) they are interested in to see more detailed information about the video and trending information. 
+      </p>
+      <h3> Designs </h3>
+      <ul>
+        <li> Increase the opacity and the radius of the circle to indicate the circle is clickable. </li>
+        <li> Only show the highest number of views in the main plot so that there aren't that many points. Otherwise, it would be too difficult for users to read and interpret.</li>
+        <li> Transform the trending information to the size of the circle. The larger the circle, the longer the video trended. </li>
+        <li> Make it interactable to filter the points by categories. so it would be easier to see the data and make compression within one category. </li>
+        <li> Rank and plot the categories by the total number of views for each category. tells information about with category of videos is the most popular. </li>
+        <li> Show some of the info of the video when hovering on the point. I choose to show the title of the video, the channel name, category name, number of views, number of likes, and dislikes. </li>
+        <li> And when clicking into the point, the user will be able to see the full trending information, as well as more information about the channel, and other videos in the channel. </li>
+        <li> Adding black borders of the points, to make it look better and easier to distinguish with each other. </li>
+      </ul>
+      <h3> Logistics </h3>
+      <p> I spent about 12 hrs on this deliverable. The part that took the most time is to think of the design, 
+        try different ideas, and make things working. </p>
     </div>
   );
 }
