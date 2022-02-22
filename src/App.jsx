@@ -66,19 +66,8 @@ function App() {
 
   const cats = [24, 10, 20, 17, 22, 23, 1, 28, 25, 27, 26, 2, 19, 15, 29]
 
-  // function get_unique_Column(name) {
-  //   var col = []
-  //   for (var i = 0; i < usvideos.length; i += 1) {
-  //     if (col.includes(usvideos[i][name]) == false) {
-  //       col.push(usvideos[i][name].toString())
-  //     }
-  //   };
-  //   return col;
-  // }
-
-  // var cats = get_unique_Column('categoryId')
-
   var point = null;
+
   const [selectedCats, setSelectedCats] = useState(cats);
 
   const [selectedPoint, setSelectedPoint] = useState(point);
@@ -94,7 +83,6 @@ function App() {
   function clickCircle(cat) {
     var cat = cat.toString()
     var circles = document.getElementsByClassName(cat);
-
     
     for (var i = 0; i < circles.length; i+= 1) {
       var circle = circles[i]
@@ -128,7 +116,6 @@ function App() {
               x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
               >
                 {usvideos_max[selectedPoint]["title"].substring(0, 30)}
-                {/* {st.substr(1, 20)} */}
             </tspan>
             <tspan
               x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
@@ -163,24 +150,15 @@ function App() {
     )
   };
 
-  // const [isHovering, setIsHovering] = useState(false);
-  // const handleMouseOver = () => {
-  //   setIsHovering(true);
-  // };
-
-  // function handleMouseOut(title){
-  //   setIsHovering(false);
-  // };
-
   function handleMouseOver(id){
     var id = id.toString()
     var circle = document.getElementById(id);
 
-    if (circle.getAttribute("opacity") == 0.1){
+    if (circle.getAttribute("opacity") == 0.15){
       circle.setAttribute("opacity", 1.0);
       circle.setAttribute("stroke", 'black');
     }else{
-      circle.setAttribute("opacity", 0.1);
+      circle.setAttribute("opacity", 0.15);
       circle.setAttribute("stroke", 'white');
     }
   }
@@ -190,11 +168,11 @@ function App() {
 
     var circle = document.getElementById(id);
     
-    if (circle.getAttribute("opacity") == 0.1){
+    if (circle.getAttribute("opacity") == 0.15){
       circle.setAttribute("opacity", 1.0);
       circle.setAttribute("stroke", 'black');
     }else{
-      circle.setAttribute("opacity", 0.1);
+      circle.setAttribute("opacity", 0.15);
       circle.setAttribute("stroke", 'white');
     }
   }
@@ -209,9 +187,9 @@ function App() {
 
   return (
     <div style={{ margin: 10 }}>
-      <div style={{ display: "flex", 'align-items':"center", 'padding-left':"20px"}}> 
-        <img src="src/YouTube-Emblem.png" alt="Italian Trulli" height="25px"/>
-        <h1 style={{'padding-left':"20px"}}> YouTube Trending Videos | 2021 </h1>
+      <div style={{ display: "flex", alignItems:"center", paddingLeft:"20px"}}> 
+        <img src="src/YouTube-Emblem.png" alt="YouTube logo" height="25px"/>
+        <h1 style={{paddingLeft:"20px"}}> YouTube Trending Videos | 2021 </h1>
       </div>
       <div style={{ display: "flex" }}>
         <svg
@@ -224,12 +202,12 @@ function App() {
               return (
                 <circle
                   id={id}
-                  class={usvideos_max[id]['categoryId']}
+                  className={usvideos_max[id]['categoryId']}
                   cx={70 + parseInt(usvideos_max[id]['trending_date']) / 365 * 1100} 
-                  cy={550 - usvideos_max[id]['view_count'] / 264407389 * 500} 
+                  cy={560 - usvideos_max[id]['view_count'] / 264407389 * 500} 
                   r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
                   fill={cat_cols[cat]} 
-                  opacity={0.1}
+                  opacity={0.15}
                   onMouseOver={() => {
                     handleMouseOver(id);
                     setSelectedPoint(id);
@@ -243,6 +221,7 @@ function App() {
             })
           })}
           {selectedPoint && <HoverText />}
+          {/* number of views for each category*/}
           {cats.map((cat, i) => {
             return (
               <text 
@@ -253,24 +232,26 @@ function App() {
               </text>
             )
           })}
+          {/* color point for each category */}
           {cats.map((cat, i) => {
             return (
               <circle
-                id={cat}
-                class={cat}
+                id={'cat' + cat}
+                // className={cat}
                 cx={1250} 
                 cy={40 + i * 23} 
                 r="8" 
                 fill={cat_cols[cat]} 
-                opacity={0.1}
+                opacity={0.15}
                 stroke={"white"}
                 strokeWidth={1.5}
                 onClick={() => clickCircle(cat)}
-                onMouseOver={() => handleMouseOver(cat)} 
-                onMouseOut={() => handleMouseOut(cat)}
+                onMouseOver={() => handleMouseOver('cat' + cat)} 
+                onMouseOut={() => handleMouseOut('cat' + cat)}
               />
             )
            })}
+           {/* name for each category */}
           {cats.map((cat, i) => {
             return (
               <text 
@@ -281,26 +262,29 @@ function App() {
               </text>
             )
           })}
+          {/* axises */}
           <AxisLeft 
             strokeWidth={1} 
             left={70} 
+            top={10}
             scale={_scaleY2} 
             stroke={"#808080"}
           />
           <AxisBottom
             strokeWidth={1}
-            top={570}
+            top={580}
             left={70}
             scale={_scaleX2}
             fontSize={25}
             stroke={"#808080"}
             numTicks={11}
           />
+          {/* text & labels */}
           <text x={1265} y={13}> Category </text>
           <text x={1160} y={13}> Total Views</text>
           <text x={1250} y={13}> | </text>
-          <text x={1210} y={570}> Days </text>
-          <text x={20} y={15}> Views </text>
+          <text x={1210} y={580}> Days </text>
+          <text x={30} y={30}> Views </text>
         </svg>
       </div>
     </div>
