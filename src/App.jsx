@@ -78,7 +78,11 @@ function App() {
 
   // var cats = get_unique_Column('categoryId')
 
-  // const [selectedCats, setSelectedCats] = useState(cats);
+  var point = null;
+  const [selectedCats, setSelectedCats] = useState(cats);
+
+  const [selectedPoint, setSelectedPoint] = useState(point);
+
   const cat_by_id = {}
   for (var i = 0; i < usvideos_max.length; i += 1) {
     if (!cat_by_id[usvideos_max[i]['categoryId']]) {
@@ -91,41 +95,73 @@ function App() {
     var cat = cat.toString()
     var circles = document.getElementsByClassName(cat);
 
+    
     for (var i = 0; i < circles.length; i+= 1) {
       var circle = circles[i]
       if (circle.getAttribute("opacity") == 0.1){
         circle.setAttribute("opacity", 1.0);
         circle.setAttribute("stroke", 'black');
-        circle.setAttribute("stroke-width", 1.5);
       } else {
         circle.setAttribute("opacity", 0.1);
         circle.setAttribute("stroke", 'white');
       }
     }
     
-    // if (selectedCats.indexOf(cat) === -1) {
-    //   setSelectedCats(selectedCats.slice(0).push(cat));
-    // } else {
-    //   setSelectedCats(
-    //     selectedCats.slice(0).filter((_cat) => {
-    //       return _cat !== cat;
-    //     })
-    //   );
-    // }
   }
 
-  // const HoverText = () => {
-  //   return (
-  //     <div>
-  //       Hovering right meow!
-  //       {console.log(22222)}
-  //       <h1>hellooooo</h1>
-  //       <span role="img" aria-label="cat">
-  //         🐱
-  //       </span>
-  //     </div>
-  //   );
-  // };
+  const HoverText = () => {
+    return (
+      <g>
+      <rect
+      width={270}
+      height={100}
+      x={90 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100}
+      y={515 - usvideos_max[selectedPoint]['view_count'] / 264407389 * 500}
+      fill="white"
+      stroke={"#808080"}
+      ></rect>
+        <text 
+          x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100}
+          y={530 - usvideos_max[selectedPoint]['view_count'] / 264407389 * 500}
+           >
+            <tspan 
+              x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
+              >
+                {usvideos_max[selectedPoint]["title"].substring(0, 30)}
+                {/* {st.substr(1, 20)} */}
+            </tspan>
+            <tspan
+              x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
+              dy={20}
+              fontSize={12}
+              >
+              {"Channel: " + usvideos_max[selectedPoint]["channelTitle"]}
+            </tspan>
+            <tspan 
+              x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
+              dy={18}
+              fontSize={12}
+              >
+                {"Category : " + cat_id_to_names[usvideos_max[selectedPoint]["categoryId"]]}
+            </tspan>
+            <tspan
+              x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
+              dy={18}
+              fontSize={12}
+              >
+              {"Like vs. Dislike: " + usvideos_max[selectedPoint]["likes"] + ":" + usvideos_max[selectedPoint]["dislikes"]}
+            </tspan>
+            <tspan
+              x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
+              dy={18}
+              fontSize={12}
+              >
+              {"View: " + usvideos_max[selectedPoint]["view_count"]}
+            </tspan>
+        </text>
+        </g>
+    )
+  };
 
   // const [isHovering, setIsHovering] = useState(false);
   // const handleMouseOver = () => {
@@ -137,19 +173,30 @@ function App() {
   // };
 
   function handleMouseOver(id){
-    var circle = document.getElementsById(id);
+    var id = id.toString()
+    var circle = document.getElementById(id);
 
     if (circle.getAttribute("opacity") == 0.1){
       circle.setAttribute("opacity", 1.0);
+      circle.setAttribute("stroke", 'black');
     }else{
       circle.setAttribute("opacity", 0.1);
+      circle.setAttribute("stroke", 'white');
     }
   }
 
   function handleMouseOut(id){
-    var circle = document.getElementsById(id);
+    var id = id.toString()
+
+    var circle = document.getElementById(id);
     
-    circle.setAttribute("opacity", 1.0);
+    if (circle.getAttribute("opacity") == 0.1){
+      circle.setAttribute("opacity", 1.0);
+      circle.setAttribute("stroke", 'black');
+    }else{
+      circle.setAttribute("opacity", 0.1);
+      circle.setAttribute("stroke", 'white');
+    }
   }
 
   const _scaleX2 = scaleLinear()
@@ -176,17 +223,26 @@ function App() {
             return ids.map((id) => {
               return (
                 <circle
+                  id={id}
                   class={usvideos_max[id]['categoryId']}
                   cx={70 + parseInt(usvideos_max[id]['trending_date']) / 365 * 1100} 
                   cy={550 - usvideos_max[id]['view_count'] / 264407389 * 500} 
                   r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
                   fill={cat_cols[cat]} 
                   opacity={0.1}
+                  onMouseOver={() => {
+                    handleMouseOver(id);
+                    setSelectedPoint(id);
+                  }}
+                  onMouseOut={() => {
+                    handleMouseOut(id);
+                    setSelectedPoint(null);
+                  }}
                 />
               )
             })
           })}
-          {/* {isHovering && <HoverText />} */}
+          {selectedPoint && <HoverText />}
           {cats.map((cat, i) => {
             return (
               <text 
@@ -208,10 +264,10 @@ function App() {
                 fill={cat_cols[cat]} 
                 opacity={0.1}
                 stroke={"white"}
-                stroke-width={1.5}
+                strokeWidth={1.5}
                 onClick={() => clickCircle(cat)}
-                onMouseOver={() => handleMouseOver()} 
-                onMouseOut={handleMouseOut}
+                onMouseOver={() => handleMouseOver(cat)} 
+                onMouseOut={() => handleMouseOut(cat)}
               />
             )
            })}
@@ -244,7 +300,7 @@ function App() {
           <text x={1160} y={13}> Total Views</text>
           <text x={1250} y={13}> | </text>
           <text x={1210} y={570}> Days </text>
-          <text x={20} y={15}> # Views </text>
+          <text x={20} y={15}> Views </text>
         </svg>
       </div>
     </div>
