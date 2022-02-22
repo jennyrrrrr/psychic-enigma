@@ -73,7 +73,14 @@ function App() {
   const [selectedPoint, setSelectedPoint] = useState(point);
 
   const points = Array.from(Array(usvideos_max.length).keys())
+
   const [selectedPoints, setSelectedPoints] = useState(points);
+
+  var hover = null
+  const [selectedHover, setSelectedHover] = useState(hover);
+
+  var catHover = null
+  const [selectedCatHover, setSelectedCatHover] = useState(catHover);
 
   function getIndexByValue(col_name, value) {
     var col = []
@@ -113,7 +120,7 @@ function App() {
     // console.log(cat_circle)
     if (cat_circle.getAttribute("opacity") == 0.15){
       cat_circle.setAttribute("opacity", 1.0);
-      cat_circle.setAttribute("stroke", 'black');
+      cat_circle.setAttribute("stroke", '#808080');
     } else {
       cat_circle.setAttribute("opacity", 0.15);
       cat_circle.setAttribute("stroke", 'white');
@@ -130,7 +137,7 @@ function App() {
       x={90 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100}
       y={515 - usvideos_max[selectedPoint]['view_count'] / 264407389 * 500}
       fill="white"
-      stroke={"#808080"}
+      stroke={"black"}
       ></rect>
         <text 
           x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100}
@@ -139,7 +146,7 @@ function App() {
             <tspan 
               x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
               >
-                {usvideos_max[selectedPoint]["title"].substring(0, 30)}
+                {usvideos_max[selectedPoint]["title"].substring(0, 26) + '...'}
             </tspan>
             <tspan
               x={95 + parseInt(usvideos_max[selectedPoint]['trending_date']) / 365 * 1100} 
@@ -194,7 +201,7 @@ function App() {
     
     if (circle.getAttribute("opacity") == 0.15){
       circle.setAttribute("opacity", 1.0);
-      circle.setAttribute("stroke", 'black');
+      circle.setAttribute("stroke", '#808080');
     }else{
       circle.setAttribute("opacity", 0.15);
       circle.setAttribute("stroke", 'white');
@@ -212,7 +219,7 @@ function App() {
   return (
     <div style={{ margin: 10 }}>
       <div style={{ display: "flex", alignItems:"center", paddingLeft:"20px"}}> 
-        <img src="src/YouTube-Emblem.png" alt="YouTube logo" height="25px"/>
+        {/* <img src="src/YouTube-Emblem.png" alt="YouTube logo" height="25px"/> */}
         <h1 style={{paddingLeft:"20px"}}> YouTube Trending Videos | 2021 </h1>
       </div>
       <div style={{ display: "flex" }}>
@@ -229,17 +236,24 @@ function App() {
                   className={usvideos_max[id]['categoryId']}
                   cx={70 + parseInt(usvideos_max[id]['trending_date']) / 365 * 1100} 
                   cy={560 - usvideos_max[id]['view_count'] / 264407389 * 500} 
-                  r={parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2} 
+                  r={selectedHover==id ? (parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2 + 2):(parseInt((usvideos_max[id]['trending_date']) - parseInt(usvideos_max[id]['publishedAt']))/2)} 
                   fill={cat_cols[cat]} 
-                  opacity={selectedPoints.includes(id) ? 1.0:0.15}
-                  stroke={'black'}
+                  opacity={(selectedPoints.includes(id) || selectedHover==id) ? 1.0:0.15}
+                  stroke={(selectedPoints.includes(id) || selectedHover==id) ? 'black':'white'}
                   onMouseOver={() => {
-                    handleMouseOver(id);
-                    setSelectedPoint(id);
+                    setSelectedHover(id)
+                    // console.log(selectedHover)
+                    // console.log(id)
+                    // console.log(selectedHover==id)
+                    setSelectedPoint(id)
+                    // handleMouseOver(id);
+                    // setSelectedPoint(id);
                   }}
                   onMouseOut={() => {
-                    handleMouseOut(id);
-                    setSelectedPoint(null);
+                    setSelectedHover(null)
+                    setSelectedPoint(null)
+                    // handleMouseOut(id);
+                    // setSelectedPoint(null);
                   }}
                 />
               )
@@ -265,21 +279,34 @@ function App() {
                 // className={cat}
                 cx={1250} 
                 cy={40 + i * 23} 
-                r="8" 
-                fill={cat_cols[cat]} 
-                opacity={selectedCats.includes(cat) ? 1.0:0.15}
-                stroke={"black"}
+                r={selectedCatHover == 'cat' + cat ? 10 : 8} 
+                fill={ cat_cols[cat]} 
+                opacity={(selectedCats.includes(cat) || selectedCatHover == 'cat' + cat) ? 1.0:0.15}
+                stroke={(selectedCats.includes(cat) || selectedCatHover == 'cat' + cat) ? "black":"white"}
                 strokeWidth={1.5}
                 // onClick={() => clickCircle(cat)}
                 onClick={() => {
                   setSelectedCats([cat])
                   setSelectedPoints(getIndexByValue('categoryId', cat))
-                  console.log(selectedCats)
-                  console.log(cat)
-                  console.log(selectedCats.includes(cat))
+                  // console.log(selectedCats)
+                  // console.log(cat)
+                  // console.log(selectedCats.includes(cat))
                 }}
                 // onMouseOver={() => handleMouseOver('cat' + cat)} 
                 // onMouseOut={() => handleMouseOut('cat' + cat)}
+                onMouseOver={() => {
+                  setSelectedCatHover('cat' + cat)
+                  // console.log(selectedHover)
+                  // console.log(id)
+                  // console.log(selectedHover==id)
+                  // handleMouseOver(id);
+                  // setSelectedPoint(id);
+                }}
+                onMouseOut={() => {
+                  setSelectedCatHover(null)
+                  // handleMouseOut(id);
+                  // setSelectedPoint(null);
+                }}
               />
             )
            })}
@@ -300,7 +327,7 @@ function App() {
             left={70} 
             top={10}
             scale={_scaleY2} 
-            stroke={"#808080"}
+            stroke={"black"}
           />
           <AxisBottom
             strokeWidth={1}
@@ -308,7 +335,7 @@ function App() {
             left={70}
             scale={_scaleX2}
             fontSize={25}
-            stroke={"#808080"}
+            stroke={"black"}
             numTicks={11}
           />
           {/* text & labels */}
