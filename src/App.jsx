@@ -364,6 +364,26 @@ function App() {
         <li> And when clicking into the point, the user will be able to see the full trending information, as well as more information about the channel, and other videos in the channel. </li>
         <li> Adding black borders of the points, to make it look better and easier to distinguish with each other. </li>
       </ul>
+      <h3>Insights</h3>
+      <ul>
+        <li>
+          The Entertainment category has the most total views of trending videos in 2021.
+          The highest viewed video is Turn Into Orbeez from FFuntv, 206 M videos. 
+          It is also the second-highest viewed video among all. 
+          Entertainment videos usually trend longer than videos from other categories. 
+        </li>
+        <li>
+          The Music category has the second-highest number of total views. The highest played video is Butter from BTS, 264 M. 
+          It is even more than all of the number of views of trending videos in the Nonprofit and Activism category. 
+          The videos from the music channel do not usually trend for a long time as the Entertainment videos do. 
+          The video that trended the longest is Easy on me from Adele, 139 M.
+        </li>
+        <li> 
+        The third-highest number of the total viewed categories is Game. 
+          This category does not have an outstandingly high number of views, but the number of trending videos is larger. 
+          The highest played video in this category is Money is Plinko Challenge from AnthonySenpai, 72 M. 
+        </li>
+      </ul>
       <h3> Logistics </h3>
       <p> I spent about 12 hrs on this deliverable. The part that took the most time is to think of the design, 
         try different ideas, and make things working. </p>
